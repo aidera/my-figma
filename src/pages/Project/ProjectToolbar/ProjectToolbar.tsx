@@ -9,8 +9,6 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import useStyles from './ProjectToolbarStyles';
-
 import NearMeIcon from '@material-ui/icons/NearMe';
 import WidgetsIcon from '@material-ui/icons/Widgets';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
@@ -18,8 +16,18 @@ import Crop54Icon from '@material-ui/icons/Crop54';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RemoveIcon from '@material-ui/icons/Remove';
 
+import useStyles from './ProjectToolbarStyles';
+
+import { useAppDispatch } from '../../../store/store-hooks';
+import {
+  setCreateModeElementType,
+  setMode,
+} from '../../../store/dashboard/dashboardReducer';
+import { DashboardCreateModeElementType } from '../../../types/dashboard.types';
+
 const ProjectToolbar = () => {
   const classes = useStyles();
+  const dispatch = useAppDispatch();
 
   const [figureItemAnchor, setFigureItemAnchor] =
     React.useState<null | HTMLElement>(null);
@@ -33,10 +41,25 @@ const ProjectToolbar = () => {
     setFigureItemAnchor(null);
   };
 
+  const handleClickOnSelectMode = () => {
+    dispatch(setMode('select'));
+  };
+
+  const handleClickOnCreateMode = (element: DashboardCreateModeElementType) => {
+    dispatch(setMode('create'));
+    dispatch(setCreateModeElementType(element));
+    handleFigureMenuClose();
+  };
+
+  const handleClickOnTextMode = () => {
+    dispatch(setMode('create'));
+    dispatch(setCreateModeElementType('text'));
+  };
+
   return (
     <AppBar position='fixed' className={classes.appBar}>
       <Toolbar>
-        <IconButton color='inherit'>
+        <IconButton color='inherit' onClick={handleClickOnSelectMode}>
           <NearMeIcon />
         </IconButton>
 
@@ -57,19 +80,19 @@ const ProjectToolbar = () => {
           open={isFigureModalOpen}
           onClose={handleFigureMenuClose}
         >
-          <MenuItem onClick={handleFigureMenuClose}>
+          <MenuItem onClick={() => handleClickOnCreateMode('rectangle')}>
             <ListItemIcon>
               <Crop54Icon fontSize='small' />
             </ListItemIcon>
             <Typography variant='inherit'>Rectangle</Typography>
           </MenuItem>
-          <MenuItem onClick={handleFigureMenuClose}>
+          <MenuItem onClick={() => handleClickOnCreateMode('circle')}>
             <ListItemIcon>
               <RadioButtonUncheckedIcon fontSize='small' />
             </ListItemIcon>
             <Typography variant='inherit'>Circle</Typography>
           </MenuItem>
-          <MenuItem onClick={handleFigureMenuClose}>
+          <MenuItem onClick={() => handleClickOnCreateMode('line')}>
             <ListItemIcon>
               <RemoveIcon fontSize='small' />
             </ListItemIcon>
@@ -77,7 +100,7 @@ const ProjectToolbar = () => {
           </MenuItem>
         </Menu>
 
-        <IconButton color='inherit'>
+        <IconButton color='inherit' onClick={handleClickOnTextMode}>
           <TextFieldsIcon />
         </IconButton>
 

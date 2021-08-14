@@ -1,6 +1,7 @@
 import React from 'react';
+
 import useStyles from './DashboardElementStyles';
-import { IDashboardElement } from '../dashboard-element.types';
+import { IDashboardElement } from '../../../../types/dashboard.types';
 
 const DashboardElement = (props: { config: IDashboardElement }) => {
   const { config } = props;

@@ -4,10 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   IDashboardCreatingElement,
   IDashboardElement,
-} from './dashboard-element.types';
+} from '../../../types/dashboard.types';
 import DashboardCreatingElement from './DashboardCreatingElement/DashboardCreatingElement';
 import DashboardElement from './DashboardElement/DashboardElement';
-
 import useStyles from './DashboardStyles';
 
 const Dashboard = () => {
@@ -44,8 +43,7 @@ const Dashboard = () => {
     }
   };
 
-  const onMouseUpHandler = (event: MouseEvent) => {
-    console.log('onMouseUp');
+  const onMouseUpHandler = () => {
     if (creatingElement) {
       let newWidth = 0;
       let newHeight = 0;
@@ -57,8 +55,12 @@ const Dashboard = () => {
         newWidth = 100;
         newHeight = 100;
       } else {
-        newWidth = Math.abs(creatingElement.point1.x - creatingElement.point2.x);
-        newHeight = Math.abs(creatingElement.point1.y - creatingElement.point2.y);
+        newWidth = Math.abs(
+          creatingElement.point1.x - creatingElement.point2.x
+        );
+        newHeight = Math.abs(
+          creatingElement.point1.y - creatingElement.point2.y
+        );
       }
 
       setElements((prev) => {

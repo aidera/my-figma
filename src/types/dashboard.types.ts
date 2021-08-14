@@ -14,5 +14,15 @@ export interface IDashboardCreatingElement {
   point2: {
     x: number;
     y: number;
-  }
+  };
 }
+
+export type DashboardModeType = 'select' | 'create' | 'move';
+
+export type DashboardCreateModeElementType =
+  | 'rectangle'
+  | 'circle'
+  | 'line'
+  | 'text'
+  | 'image'
+  | null;
