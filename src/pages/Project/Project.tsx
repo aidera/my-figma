@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toolbar } from '@material-ui/core';
 
 import useStyles from './ProjectStyles';
 
@@ -13,9 +14,12 @@ const Project = () => {
   return (
     <div className={classes.root}>
       <ProjectToolbar />
-      <Layers />
-      <Dashboard />
-      <ItemDetails />
+      {/* <Layers /> */}
+      <main className={classes.content}>
+        <Toolbar />
+        <Dashboard />
+      </main>
+      {/* <ItemDetails /> */}
     </div>
   );
 };
