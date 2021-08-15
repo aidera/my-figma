@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IDashboardElementRectangle } from '../../../../../types/dashboard.types';
 import useStyles from './RectangleStyles';
 

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IDashboardElementLine } from '../../../../../types/dashboard.types';
 import useStyles from './LineStyles';
 
