@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
@@ -13,7 +13,11 @@ import {
   selectElements,
   selectMode,
 } from '../../../store/dashboard/dashboardSelectors';
-import { DEFAULT_ELEMENT_NAME, IDashboardElement } from '../../../types/dashboard.types';
+import {
+  AnyDashboardElement,
+  DEFAULT_ELEMENT_NAME,
+  IDashboardElement,
+} from '../../../types/dashboard.types';
 import DashboardCreatingElement from './DashboardCreatingElement/DashboardCreatingElement';
 import DashboardElement from './DashboardElement/DashboardElement';
 import useStyles from './DashboardStyles';
@@ -26,6 +30,14 @@ const Dashboard = () => {
   const creatingElement = useAppSelector(selectCreatingElement);
   const mode = useAppSelector(selectMode);
   const elementType = useAppSelector(selectCreateModeElementType);
+
+  const [elementsToDisplay, setElementsToDisplay] = useState<
+    AnyDashboardElement[]
+  >([]);
+
+  useEffect(() => {
+    setElementsToDisplay([...elements].reverse());
+  }, [elements]);
 
   const onMouseDownHandler = (event: MouseEvent) => {
     /** Creating mode  */
@@ -119,7 +131,7 @@ const Dashboard = () => {
       onMouseUp={onMouseUpHandler}
       onMouseMove={onMouseMoveHandler}
     >
-      {elements.map((element) => {
+      {elementsToDisplay.map((element) => {
         return <DashboardElement key={element.id} config={element} />;
       })}
       {creatingElement && <DashboardCreatingElement config={creatingElement} />}

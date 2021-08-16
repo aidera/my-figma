@@ -26,7 +26,7 @@ export const dashboardSlice = createSlice({
   initialState,
   reducers: {
     addElement: (state, action: PayloadAction<AnyDashboardElement>) => {
-      state.elements.push(action.payload);
+      state.elements.unshift(action.payload);
     },
 
     updateElementPosition: (
