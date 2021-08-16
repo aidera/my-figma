@@ -14,7 +14,7 @@ const Project = () => {
   return (
     <div className={classes.root}>
       <ProjectToolbar />
-      {/* <Layers /> */}
+      <Layers />
       <main className={classes.content}>
         <Toolbar />
         <Dashboard />

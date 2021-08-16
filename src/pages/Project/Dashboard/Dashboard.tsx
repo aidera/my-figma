@@ -1,25 +1,29 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
+import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
+import {
+  addElement,
+  setCreatingElement,
+  setCreatingElementDimensions,
+} from '../../../store/dashboard/dashboardReducer';
 import {
   selectCreateModeElementType,
+  selectCreatingElement,
+  selectElements,
   selectMode,
 } from '../../../store/dashboard/dashboardSelectors';
-import { useAppSelector } from '../../../store/store-hooks';
-
-import {
-  IDashboardCreatingElement,
-  IDashboardElement,
-} from '../../../types/dashboard.types';
+import { DEFAULT_ELEMENT_NAME, IDashboardElement } from '../../../types/dashboard.types';
 import DashboardCreatingElement from './DashboardCreatingElement/DashboardCreatingElement';
 import DashboardElement from './DashboardElement/DashboardElement';
 import useStyles from './DashboardStyles';
 
 const Dashboard = () => {
   const classes = useStyles();
-  const [elements, setElements] = useState<IDashboardElement[]>([]);
-  const [creatingElement, setCreatingElement] =
-    useState<IDashboardCreatingElement | null>(null);
+  const dispatch = useAppDispatch();
 
+  const elements = useAppSelector(selectElements);
+  const creatingElement = useAppSelector(selectCreatingElement);
   const mode = useAppSelector(selectMode);
   const elementType = useAppSelector(selectCreateModeElementType);
 
@@ -27,10 +31,12 @@ const Dashboard = () => {
     /** Creating mode  */
     switch (mode) {
       case 'create':
-        setCreatingElement({
-          point1: { x: event.pageX, y: event.pageY },
-          point2: { x: event.pageX, y: event.pageY },
-        });
+        dispatch(
+          setCreatingElement({
+            point1: { x: event.pageX, y: event.pageY },
+            point2: { x: event.pageX, y: event.pageY },
+          })
+        );
         break;
     }
   };
@@ -41,19 +47,11 @@ const Dashboard = () => {
       case 'create':
         if (creatingElement) {
           /** Updating element with/height by event x/y */
-          setCreatingElement((prev) => {
-            if (prev) {
-              const newCreatingElement = {
-                ...prev,
-                point2: { ...prev.point2 },
-              };
-              newCreatingElement.point2.x = event.pageX;
-              newCreatingElement.point2.y = event.pageY;
-              return newCreatingElement;
-            } else {
-              return prev;
-            }
-          });
+          dispatch(
+            setCreatingElementDimensions({
+              point2: { x: event.pageX, y: event.pageY },
+            })
+          );
         }
         break;
     }
@@ -83,34 +81,32 @@ const Dashboard = () => {
             );
           }
 
-          setElements((prev) => {
-            const newDashboardElements = [...prev];
-            const newDashboardElement: IDashboardElement = {
-              id: uuidv4(),
-              type: elementType,
-              width: newWidth,
-              height: newHeight,
-              x:
-                creatingElement.point1.x <= creatingElement.point2.x
-                  ? creatingElement.point1.x
-                  : creatingElement.point2.x,
-              y:
-                creatingElement.point1.y <= creatingElement.point2.y
-                  ? creatingElement.point1.y
-                  : creatingElement.point2.y,
-              point1: {
-                y: creatingElement.point1.y,
-                x: creatingElement.point1.x,
-              },
-              point2: {
-                y: creatingElement.point2.y,
-                x: creatingElement.point2.x,
-              },
-            };
-            newDashboardElements.push(newDashboardElement);
-            return newDashboardElements;
-          });
-          setCreatingElement(null);
+          const newDashboardElement: IDashboardElement = {
+            id: uuidv4(),
+            name: elementType ? DEFAULT_ELEMENT_NAME[elementType] || '' : '',
+            type: elementType,
+            width: newWidth,
+            height: newHeight,
+            x:
+              creatingElement.point1.x <= creatingElement.point2.x
+                ? creatingElement.point1.x
+                : creatingElement.point2.x,
+            y:
+              creatingElement.point1.y <= creatingElement.point2.y
+                ? creatingElement.point1.y
+                : creatingElement.point2.y,
+            point1: {
+              y: creatingElement.point1.y,
+              x: creatingElement.point1.x,
+            },
+            point2: {
+              y: creatingElement.point2.y,
+              x: creatingElement.point2.x,
+            },
+          };
+
+          dispatch(addElement(newDashboardElement));
+          dispatch(setCreatingElement(null));
         }
         break;
     }

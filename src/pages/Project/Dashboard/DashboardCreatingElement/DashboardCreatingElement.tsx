@@ -1,7 +1,7 @@
 import React from 'react';
 
 import useStyles from './DashboardCreatingElementStyles';
-import { IDashboardCreatingElement } from '../../../../types/dashboard.types';
+import { DEFAULT_ELEMENT_NAME, IDashboardCreatingElement } from '../../../../types/dashboard.types';
 import DashboardElement from '../DashboardElement/DashboardElement';
 import { useAppSelector } from '../../../../store/store-hooks';
 import { selectCreateModeElementType } from '../../../../store/dashboard/dashboardSelectors';
@@ -19,6 +19,7 @@ const DashboardCreatingElement = (props: {
       <DashboardElement
         config={{
           id: 'creating-element',
+          name: elementType ? DEFAULT_ELEMENT_NAME[elementType] || '' : '',
           type: elementType,
           height: Math.abs(config.point1.y - config.point2.y),
           width: Math.abs(config.point1.x - config.point2.x),

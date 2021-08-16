@@ -1,5 +1,6 @@
 export interface IDashboardElement {
   id: string;
+  name: string;
   type: DashboardCreateModeElementType;
   x: number;
   y: number;
@@ -36,6 +37,12 @@ export interface IDashboardElementLine extends IDashboardElement {
   lineWidth: number;
 }
 
+export type AnyDashboardElement =
+  | IDashboardElement
+  | IDashboardElementRectangle
+  | IDashboardElementLine
+  | IDashboardElementCircle;
+
 export interface IDashboardCreatingElement {
   point1: {
     x: number;
@@ -46,6 +53,14 @@ export interface IDashboardCreatingElement {
     y: number;
   };
 }
+
+export const DEFAULT_ELEMENT_NAME = {
+  rectangle: 'Rectangle',
+  circle: 'Circle',
+  line: 'Line',
+  text: 'Text',
+  image: 'Image',
+};
 
 export type DashboardModeType = 'select' | 'create' | 'move';
 
