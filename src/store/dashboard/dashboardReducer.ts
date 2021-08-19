@@ -10,6 +10,7 @@ import {
 interface DashboardState {
   elements: AnyDashboardElement[];
   creatingElement: IDashboardCreatingElement | null;
+  selectedElement: AnyDashboardElement | null;
   mode: DashboardModeType;
   createModeElementType: DashboardCreateModeElementType;
 }
@@ -17,6 +18,7 @@ interface DashboardState {
 const initialState: DashboardState = {
   elements: [],
   creatingElement: null,
+  selectedElement: null,
   mode: 'select' as DashboardModeType,
   createModeElementType: null as DashboardCreateModeElementType,
 };
@@ -27,6 +29,7 @@ export const dashboardSlice = createSlice({
   reducers: {
     addElement: (state, action: PayloadAction<AnyDashboardElement>) => {
       state.elements.unshift(action.payload);
+      state.creatingElement = null;
     },
 
     updateElementPosition: (
@@ -51,6 +54,13 @@ export const dashboardSlice = createSlice({
       state.creatingElement = action.payload;
     },
 
+    setSelectedElement: (
+      state,
+      action: PayloadAction<AnyDashboardElement | null>
+    ) => {
+      state.selectedElement = action.payload;
+    },
+
     setCreatingElementDimensions: (
       state,
       action: PayloadAction<{ point2: { x: number; y: number } }>
@@ -64,6 +74,10 @@ export const dashboardSlice = createSlice({
       state.mode = action.payload;
       if (action.payload !== 'create') {
         state.createModeElementType = null;
+        state.creatingElement = null;
+      }
+      if (action.payload !== 'select') {
+        state.selectedElement = null;
       }
     },
 
@@ -80,6 +94,7 @@ export const {
   addElement,
   updateElementPosition,
   setCreatingElement,
+  setSelectedElement,
   setCreatingElementDimensions,
   setMode,
   setCreateModeElementType,

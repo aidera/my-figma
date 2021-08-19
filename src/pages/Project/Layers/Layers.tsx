@@ -22,7 +22,8 @@ import {
 import useStyles from './LayersStyles';
 import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
 import { selectElements } from '../../../store/dashboard/dashboardSelectors';
-import { updateElementPosition } from '../../../store/dashboard/dashboardReducer';
+import { setSelectedElement, updateElementPosition } from '../../../store/dashboard/dashboardReducer';
+import { AnyDashboardElement } from '../../../types/dashboard.types';
 
 const Layers = () => {
   const classes = useStyles();
@@ -34,7 +35,6 @@ const Layers = () => {
     isDragging: boolean,
     draggableStyle: DraggingStyle | NotDraggingStyle | undefined
   ) => ({
-    // styles we need to apply on draggables
     ...draggableStyle,
     ...(isDragging && {
       background: 'rgb(235,235,235)',
@@ -50,6 +50,10 @@ const Layers = () => {
       })
     );
   };
+
+  const onClickHandler = (element: AnyDashboardElement) => {
+    dispatch(setSelectedElement(element));
+  }
 
   return (
     <Drawer
@@ -84,6 +88,7 @@ const Layers = () => {
                           snapshot.isDragging,
                           provided.draggableProps.style
                         )}
+                        onClick={() => onClickHandler(element)}
                       >
                         <ListItemIcon>
                           <LayersIcon />

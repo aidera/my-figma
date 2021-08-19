@@ -19,7 +19,7 @@ const Project = () => {
         <Toolbar />
         <Dashboard />
       </main>
-      {/* <ItemDetails /> */}
+      <ItemDetails />
     </div>
   );
 };

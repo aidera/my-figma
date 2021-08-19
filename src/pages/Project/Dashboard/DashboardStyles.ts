@@ -2,7 +2,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    root: {},
+    canvas: {
       position: 'fixed',
       top: 0,
       left: 0,

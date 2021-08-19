@@ -6,6 +6,8 @@ import {
   addElement,
   setCreatingElement,
   setCreatingElementDimensions,
+  setMode,
+  setSelectedElement,
 } from '../../../store/dashboard/dashboardReducer';
 import {
   selectCreateModeElementType,
@@ -69,8 +71,9 @@ const Dashboard = () => {
     }
   };
 
-  const onMouseUpHandler = () => {
-    /** Creating mode */
+  const onMouseUpHandler = (event: MouseEvent) => {
+    event.stopPropagation();
+
     switch (mode) {
       case 'create':
         if (creatingElement) {
@@ -118,9 +121,16 @@ const Dashboard = () => {
           };
 
           dispatch(addElement(newDashboardElement));
-          dispatch(setCreatingElement(null));
+          dispatch(setMode('select'));
+          dispatch(setSelectedElement(newDashboardElement));
         }
         break;
+    }
+  };
+
+  const onEmptySpaceMouseUpHandler = () => {
+    if (mode === 'select') {
+      dispatch(setSelectedElement(null));
     }
   };
 
@@ -131,6 +141,7 @@ const Dashboard = () => {
       onMouseUp={onMouseUpHandler}
       onMouseMove={onMouseMoveHandler}
     >
+      <div className={classes.canvas} onMouseUp={onEmptySpaceMouseUpHandler}></div>
       {elementsToDisplay.map((element) => {
         return <DashboardElement key={element.id} config={element} />;
       })}
