@@ -1,3 +1,5 @@
+export type BasicCoords = { x: number; y: number };
+
 export interface IDashboardElement {
   id: string;
   name: string;
@@ -6,14 +8,8 @@ export interface IDashboardElement {
   y: number;
   width: number;
   height: number;
-  point1: {
-    x: number;
-    y: number;
-  };
-  point2: {
-    x: number;
-    y: number;
-  };
+  point1: BasicCoords;
+  point2: BasicCoords;
 }
 
 export interface IDashboardElementRectangle extends IDashboardElement {
@@ -44,14 +40,8 @@ export type AnyDashboardElement =
   | IDashboardElementCircle;
 
 export interface IDashboardCreatingElement {
-  point1: {
-    x: number;
-    y: number;
-  };
-  point2: {
-    x: number;
-    y: number;
-  };
+  point1: BasicCoords;
+  point2: BasicCoords;
 }
 
 export const DEFAULT_ELEMENT_NAME = {

@@ -6,10 +6,14 @@ import Rectangle from './Rectangle/Rectangle';
 import Circle from './Circle/Circle';
 import Line from './Line/Line';
 import { useAppDispatch, useAppSelector } from '../../../../store/store-hooks';
-import { setSelectedElement } from '../../../../store/dashboard/dashboardReducer';
+import {
+  setMovingElement,
+  setSelectedElement,
+} from '../../../../store/dashboard/dashboardReducer';
 import {
   selectMode,
-  selectSelectedElement,
+  selectMovingElementId,
+  selectSelectedElementId,
 } from '../../../../store/dashboard/dashboardSelectors';
 
 const DashboardElement = (props: { config: IDashboardElement }) => {
@@ -19,14 +23,36 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
   const dispatch = useAppDispatch();
 
   const mode = useAppSelector(selectMode);
-  const selectedElement = useAppSelector(selectSelectedElement);
+  const selectedElementId = useAppSelector(selectSelectedElementId);
+  const movingElementId = useAppSelector(selectMovingElementId);
 
-  const isSelected = selectedElement && selectedElement.id === config.id;
+  const isSelected = selectedElementId && selectedElementId === config.id;
+  const isMoving = movingElementId && movingElementId === config.id;
 
   const onClickHandler = (event: MouseEvent) => {
     event.stopPropagation();
     if (mode === 'select') {
       dispatch(setSelectedElement(config));
+    }
+  };
+
+  const onMouseDownHandler = (event: MouseEvent) => {
+    console.log(event);
+    event.preventDefault();
+    if (mode === 'select' && isSelected && !isMoving) {
+      dispatch(
+        setMovingElement({
+          element: config,
+          startCoords: { x: config.x, y: config.y },
+          mouseStartCoords: { x: event.pageX, y: event.pageY },
+        })
+      );
+    }
+  };
+
+  const onMouseUpHandler = () => {
+    if (mode === 'select' && isSelected && isMoving) {
+      dispatch(setMovingElement(null));
     }
   };
 
@@ -40,6 +66,8 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
         top: config.y,
       }}
       onClick={onClickHandler}
+      onMouseDown={onMouseDownHandler}
+      onMouseUp={onMouseUpHandler}
     >
       {config.type === 'rectangle' && (
         <Rectangle
@@ -70,10 +98,7 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
       )}
 
       {isSelected && (
-        <div
-          className={classes.selectContainer}
-          onClick={onClickHandler}
-        >
+        <div className={classes.selectContainer} onClick={onClickHandler}>
           <div
             className={classes.selectPoint + ' ' + classes.selectTopLeftPoint}
           ></div>

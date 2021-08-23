@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
 import {
   addElement,
+  moveElement,
   setCreatingElement,
   setCreatingElementDimensions,
   setMode,
@@ -14,6 +15,7 @@ import {
   selectCreatingElement,
   selectElements,
   selectMode,
+  selectMovingElement,
 } from '../../../store/dashboard/dashboardSelectors';
 import {
   AnyDashboardElement,
@@ -30,6 +32,7 @@ const Dashboard = () => {
 
   const elements = useAppSelector(selectElements);
   const creatingElement = useAppSelector(selectCreatingElement);
+  const movingElement = useAppSelector(selectMovingElement);
   const mode = useAppSelector(selectMode);
   const elementType = useAppSelector(selectCreateModeElementType);
 
@@ -64,6 +67,16 @@ const Dashboard = () => {
           dispatch(
             setCreatingElementDimensions({
               point2: { x: event.pageX, y: event.pageY },
+            })
+          );
+        }
+        break;
+      case 'select':
+        if (movingElement) {
+          dispatch(
+            moveElement({
+              x: event.pageX,
+              y: event.pageY,
             })
           );
         }
@@ -140,8 +153,12 @@ const Dashboard = () => {
       onMouseDown={onMouseDownHandler}
       onMouseUp={onMouseUpHandler}
       onMouseMove={onMouseMoveHandler}
+      draggable='false'
     >
-      <div className={classes.canvas} onMouseUp={onEmptySpaceMouseUpHandler}></div>
+      <div
+        className={classes.canvas}
+        onMouseUp={onEmptySpaceMouseUpHandler}
+      ></div>
       {elementsToDisplay.map((element) => {
         return <DashboardElement key={element.id} config={element} />;
       })}
