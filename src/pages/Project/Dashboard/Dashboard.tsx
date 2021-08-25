@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
 import {
   addElement,
   moveElement,
+  resizeElement,
   setCreatingElement,
   setCreatingElementDimensions,
   setMode,
@@ -16,6 +17,8 @@ import {
   selectElements,
   selectMode,
   selectMovingElement,
+  selectMovingElementId,
+  selectResizingElementId,
 } from '../../../store/dashboard/dashboardSelectors';
 import {
   AnyDashboardElement,
@@ -32,7 +35,8 @@ const Dashboard = () => {
 
   const elements = useAppSelector(selectElements);
   const creatingElement = useAppSelector(selectCreatingElement);
-  const movingElement = useAppSelector(selectMovingElement);
+  const movingElementId = useAppSelector(selectMovingElementId);
+  const resizingElementId = useAppSelector(selectResizingElementId);
   const mode = useAppSelector(selectMode);
   const elementType = useAppSelector(selectCreateModeElementType);
 
@@ -72,11 +76,18 @@ const Dashboard = () => {
         }
         break;
       case 'select':
-        if (movingElement) {
+        if (movingElementId) {
           dispatch(
             moveElement({
               x: event.pageX,
               y: event.pageY,
+            })
+          );
+        }
+        if (resizingElementId) {
+          dispatch(
+            resizeElement({
+              mouseCoords: { x: event.pageX, y: event.pageY }
             })
           );
         }

@@ -26,6 +26,18 @@ export const selectMovingElement = (state: RootState) => {
 export const selectMovingElementMouseStartCoords = (state: RootState) =>
   state.dashboard.movingElementMouseStartCoords;
 
+export const selectResizingElementId = (state: RootState) =>
+  state.dashboard.resizingElementId;
+
+export const selectResizingElement = (state: RootState) => {
+  return state.dashboard.elements.find(
+    (element) => element.id === state.dashboard?.resizingElementId
+  );
+};
+
+export const selectResizingElementMouseStartCoords = (state: RootState) =>
+  state.dashboard.resizingElementMouseStartCoords;
+
 export const selectMode = (state: RootState) => state.dashboard.mode;
 
 export const selectCreateModeElementType = (state: RootState) =>

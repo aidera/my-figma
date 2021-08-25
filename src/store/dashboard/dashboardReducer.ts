@@ -6,6 +6,7 @@ import {
   AnyDashboardElement,
   IDashboardCreatingElement,
   BasicCoords,
+  DashboardResizeEnum,
 } from '../../types/dashboard.types';
 
 interface DashboardState {
@@ -15,6 +16,9 @@ interface DashboardState {
   movingElementId: string | null;
   movingElementStartCoords: BasicCoords | null;
   movingElementMouseStartCoords: BasicCoords | null;
+  resizingElementId: string | null;
+  resizeMode: DashboardResizeEnum | null;
+  resizingElementMouseStartCoords: BasicCoords | null;
   mode: DashboardModeType;
   createModeElementType: DashboardCreateModeElementType;
 }
@@ -26,6 +30,9 @@ const initialState: DashboardState = {
   movingElementId: null,
   movingElementStartCoords: null,
   movingElementMouseStartCoords: null,
+  resizingElementId: null,
+  resizeMode: null,
+  resizingElementMouseStartCoords: null,
   mode: 'select' as DashboardModeType,
   createModeElementType: null as DashboardCreateModeElementType,
 };
@@ -65,7 +72,13 @@ export const dashboardSlice = createSlice({
       state,
       action: PayloadAction<AnyDashboardElement | null>
     ) => {
-      state.selectedElementId = action.payload ? action.payload.id : null;
+      if (action.payload) {
+        state.selectedElementId = action.payload.id;
+      } else {
+        state.selectedElementId = null;
+        state.movingElementId = null;
+        state.resizingElementId = null;
+      }
     },
 
     setCreatingElementDimensions: (
@@ -85,6 +98,8 @@ export const dashboardSlice = createSlice({
       }
       if (action.payload !== 'select') {
         state.selectedElementId = null;
+        state.movingElementId = null;
+        state.resizingElementId = null;
       }
     },
 
@@ -132,6 +147,118 @@ export const dashboardSlice = createSlice({
         }
       }
     },
+
+    setResizingElement: (
+      state,
+      action: PayloadAction<{
+        mouseStartCoords: BasicCoords;
+        element: AnyDashboardElement;
+        mode: DashboardResizeEnum;
+      } | null>
+    ) => {
+      state.resizingElementId = action.payload
+        ? action.payload.element.id
+        : null;
+      state.resizingElementMouseStartCoords = action.payload
+        ? action.payload.mouseStartCoords
+        : null;
+      state.resizeMode = action.payload ? action.payload.mode : null;
+    },
+
+    resizeElement: (
+      state,
+      action: PayloadAction<{
+        mouseCoords: BasicCoords;
+      }>
+    ) => {
+      if (state.resizingElementId && state.resizingElementMouseStartCoords) {
+        const id = state.resizingElementId;
+
+        const found = state.elements.findIndex((el) => el.id === id);
+
+        if (found >= 0) {
+          const heightDiff =
+            state.elements[found].height -
+            (action.payload.mouseCoords.y - state.elements[found].y);
+          const widthDiff =
+            state.elements[found].width -
+            (action.payload.mouseCoords.x - state.elements[found].x);
+
+          switch (state.resizeMode) {
+            case DashboardResizeEnum.top:
+              if (heightDiff > 0) {
+                state.elements[found].height = heightDiff;
+                state.elements[found].y = action.payload.mouseCoords.y;
+              }
+              break;
+
+            case DashboardResizeEnum.topRight:
+              if (heightDiff > 0) {
+                state.elements[found].height = heightDiff;
+                state.elements[found].y = action.payload.mouseCoords.y;
+              }
+
+              state.elements[found].width =
+                action.payload.mouseCoords.x - state.elements[found].x;
+              break;
+
+            case DashboardResizeEnum.right:
+              state.elements[found].width =
+                action.payload.mouseCoords.x - state.elements[found].x;
+              break;
+
+            case DashboardResizeEnum.bottomRight:
+              state.elements[found].height =
+                action.payload.mouseCoords.y - state.elements[found].y;
+
+              state.elements[found].width =
+                action.payload.mouseCoords.x - state.elements[found].x;
+              break;
+
+            case DashboardResizeEnum.bottom:
+              state.elements[found].height =
+                action.payload.mouseCoords.y - state.elements[found].y;
+              break;
+
+            case DashboardResizeEnum.bottomLeft:
+              state.elements[found].height =
+                action.payload.mouseCoords.y - state.elements[found].y;
+
+              if (widthDiff > 0) {
+                state.elements[found].width = widthDiff;
+                state.elements[found].x = action.payload.mouseCoords.x;
+              }
+              break;
+
+            case DashboardResizeEnum.left:
+              if (widthDiff > 0) {
+                state.elements[found].width = widthDiff;
+                state.elements[found].x = action.payload.mouseCoords.x;
+              }
+              break;
+
+            case DashboardResizeEnum.topLeft:
+              if (heightDiff > 0) {
+                state.elements[found].height = heightDiff;
+                state.elements[found].y = action.payload.mouseCoords.y;
+              }
+              if (widthDiff > 0) {
+                state.elements[found].width = widthDiff;
+                state.elements[found].x = action.payload.mouseCoords.x;
+              }
+              break;
+          }
+
+          if (state.elements[found].height < 1) {
+            state.elements[found].height = 1;
+          }
+
+          if (state.elements[found].width < 1) {
+            state.elements[found].width = 1;
+          }
+        }
+      }
+    },
   },
 });
 
@@ -145,6 +272,8 @@ export const {
   setCreateModeElementType,
   setMovingElement,
   moveElement,
+  setResizingElement,
+  resizeElement,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

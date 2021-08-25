@@ -1,18 +1,24 @@
 import React, { MouseEvent } from 'react';
 
 import useStyles from './DashboardElementStyles';
-import { IDashboardElement } from '../../../../types/dashboard.types';
+import {
+  DashboardResizeEnum,
+  IDashboardElement,
+} from '../../../../types/dashboard.types';
 import Rectangle from './Rectangle/Rectangle';
 import Circle from './Circle/Circle';
 import Line from './Line/Line';
 import { useAppDispatch, useAppSelector } from '../../../../store/store-hooks';
 import {
+  resizeElement,
   setMovingElement,
+  setResizingElement,
   setSelectedElement,
 } from '../../../../store/dashboard/dashboardReducer';
 import {
   selectMode,
   selectMovingElementId,
+  selectResizingElementId,
   selectSelectedElementId,
 } from '../../../../store/dashboard/dashboardSelectors';
 
@@ -25,19 +31,20 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
   const mode = useAppSelector(selectMode);
   const selectedElementId = useAppSelector(selectSelectedElementId);
   const movingElementId = useAppSelector(selectMovingElementId);
+  const resizingElementId = useAppSelector(selectResizingElementId);
 
   const isSelected = selectedElementId && selectedElementId === config.id;
   const isMoving = movingElementId && movingElementId === config.id;
+  const isResizing = resizingElementId && resizingElementId === config.id;
 
-  const onClickHandler = (event: MouseEvent) => {
+  const onElementClickHandler = (event: MouseEvent) => {
     event.stopPropagation();
     if (mode === 'select') {
       dispatch(setSelectedElement(config));
     }
   };
 
-  const onMouseDownHandler = (event: MouseEvent) => {
-    console.log(event);
+  const onElementMouseDownHandler = (event: MouseEvent) => {
     event.preventDefault();
     if (mode === 'select' && isSelected && !isMoving) {
       dispatch(
@@ -50,9 +57,38 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
     }
   };
 
-  const onMouseUpHandler = () => {
-    if (mode === 'select' && isSelected && isMoving) {
-      dispatch(setMovingElement(null));
+  const onElementMouseUpHandler = () => {
+    if (mode === 'select' && isSelected) {
+      if (isMoving) {
+        dispatch(setMovingElement(null));
+      }
+      if (isResizing) {
+        dispatch(setResizingElement(null));
+      }
+    }
+  };
+
+  const onResizeMouseDownHandler = (
+    event: MouseEvent,
+    resizeMode: DashboardResizeEnum
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (mode === 'select' && isSelected) {
+      dispatch(
+        setResizingElement({
+          element: config,
+          mouseStartCoords: { x: event.pageX, y: event.pageY },
+          mode: resizeMode,
+        })
+      );
+    }
+  };
+
+  const onResizeMouseUpHandler = (event: MouseEvent) => {
+    event.preventDefault();
+    if (mode === 'select' && isSelected) {
+      dispatch(setResizingElement(null));
     }
   };
 
@@ -65,9 +101,9 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
         left: config.x,
         top: config.y,
       }}
-      onClick={onClickHandler}
-      onMouseDown={onMouseDownHandler}
-      onMouseUp={onMouseUpHandler}
+      onClick={onElementClickHandler}
+      onMouseDown={onElementMouseDownHandler}
+      onMouseUp={onElementMouseUpHandler}
     >
       {config.type === 'rectangle' && (
         <Rectangle
@@ -98,19 +134,69 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
       )}
 
       {isSelected && (
-        <div className={classes.selectContainer} onClick={onClickHandler}>
+        <div
+          className={classes.selectContainer}
+          onClick={onElementClickHandler}
+        >
+          {/* Lines */}
           <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.top)
+            }
+            onMouseUp={onResizeMouseUpHandler}
+            className={classes.selectLine + ' ' + classes.selectTopLine}
+          ></div>
+          <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.right)
+            }
+            onMouseUp={onResizeMouseUpHandler}
+            className={classes.selectLine + ' ' + classes.selectRightLine}
+          ></div>
+          <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.bottom)
+            }
+            onMouseUp={onResizeMouseUpHandler}
+            className={classes.selectLine + ' ' + classes.selectBottomLine}
+          ></div>
+          <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.left)
+            }
+            onMouseUp={onResizeMouseUpHandler}
+            className={classes.selectLine + ' ' + classes.selectLeftLine}
+          ></div>
+
+          {/* Points */}
+          <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.topLeft)
+            }
+            onMouseUp={onResizeMouseUpHandler}
             className={classes.selectPoint + ' ' + classes.selectTopLeftPoint}
           ></div>
           <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.topRight)
+            }
+            onMouseUp={onResizeMouseUpHandler}
             className={classes.selectPoint + ' ' + classes.selectTopRightPoint}
           ></div>
           <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.bottomLeft)
+            }
+            onMouseUp={onResizeMouseUpHandler}
             className={
               classes.selectPoint + ' ' + classes.selectBottomLeftPoint
             }
           ></div>
           <div
+            onMouseDown={(event) =>
+              onResizeMouseDownHandler(event, DashboardResizeEnum.bottomRight)
+            }
+            onMouseUp={onResizeMouseUpHandler}
             className={
               classes.selectPoint + ' ' + classes.selectBottomRightPoint
             }

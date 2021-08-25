@@ -61,3 +61,14 @@ export type DashboardCreateModeElementType =
   | 'text'
   | 'image'
   | null;
+
+export enum DashboardResizeEnum {
+  top,
+  topRight,
+  right,
+  bottomRight,
+  bottom,
+  bottomLeft,
+  left,
+  topLeft,
+}
