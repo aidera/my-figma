@@ -11,7 +11,7 @@ import {
 
 import NearMeIcon from '@material-ui/icons/NearMe';
 import WidgetsIcon from '@material-ui/icons/Widgets';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
+// import TextFieldsIcon from '@material-ui/icons/TextFields';
 import Crop54Icon from '@material-ui/icons/Crop54';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -51,10 +51,10 @@ const ProjectToolbar = () => {
     handleFigureMenuClose();
   };
 
-  const handleClickOnTextMode = () => {
-    dispatch(setMode('create'));
-    dispatch(setCreateModeElementType('text'));
-  };
+  // const handleClickOnTextMode = () => {
+  //   dispatch(setMode('create'));
+  //   dispatch(setCreateModeElementType('text'));
+  // };
 
   return (
     <AppBar position='fixed' className={classes.appBar}>
@@ -100,9 +100,9 @@ const ProjectToolbar = () => {
           </MenuItem>
         </Menu>
 
-        <IconButton color='inherit' onClick={handleClickOnTextMode}>
+        {/* <IconButton color='inherit' onClick={handleClickOnTextMode}>
           <TextFieldsIcon />
-        </IconButton>
+        </IconButton> */}
 
         <Typography variant='h6' className={classes.title}>
           Project
