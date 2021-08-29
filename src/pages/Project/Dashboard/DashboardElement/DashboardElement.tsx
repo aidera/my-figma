@@ -124,11 +124,15 @@ const DashboardElement = (props: {
                 (config as IDashboardElementRectangle).border?.color ||
                 createModeDefaults.rectangle.border.color,
               width:
-                (config as IDashboardElementRectangle).border?.width ||
-                createModeDefaults.rectangle.border.width,
+                (config as IDashboardElementRectangle).border?.width !==
+                undefined
+                  ? (config as IDashboardElementRectangle).border?.width
+                  : createModeDefaults.rectangle.border.width,
               radius:
-                (config as IDashboardElementRectangle).border?.radius ||
-                createModeDefaults.rectangle.border.radius,
+                (config as IDashboardElementRectangle).border?.radius !==
+                undefined
+                  ? (config as IDashboardElementRectangle).border?.radius
+                  : createModeDefaults.rectangle.border.radius,
             },
           }}
         />
@@ -145,8 +149,9 @@ const DashboardElement = (props: {
                 (config as IDashboardElementCircle).border?.color ||
                 createModeDefaults.circle.border.color,
               width:
-                (config as IDashboardElementCircle).border?.width ||
-                createModeDefaults.circle.border.width,
+                (config as IDashboardElementCircle).border?.width !== undefined
+                  ? (config as IDashboardElementCircle).border?.width
+                  : createModeDefaults.circle.border.width,
             },
           }}
         />
@@ -159,8 +164,9 @@ const DashboardElement = (props: {
               (config as IDashboardElementLine).fill ||
               createModeDefaults.line.fill,
             lineWidth:
-              (config as IDashboardElementLine).lineWidth ||
-              createModeDefaults.line.lineWidth,
+              (config as IDashboardElementLine).lineWidth !== undefined
+                ? (config as IDashboardElementLine).lineWidth
+                : createModeDefaults.line.lineWidth,
           }}
         />
       )}
