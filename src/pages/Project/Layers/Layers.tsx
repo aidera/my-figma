@@ -8,6 +8,7 @@ import {
   ListItemText,
   RootRef,
   Toolbar,
+  Typography,
 } from '@material-ui/core';
 import LayersIcon from '@material-ui/icons/Layers';
 import {
@@ -22,7 +23,10 @@ import {
 import useStyles from './LayersStyles';
 import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
 import { selectElements } from '../../../store/dashboard/dashboardSelectors';
-import { setSelectedElement, updateElementPosition } from '../../../store/dashboard/dashboardReducer';
+import {
+  setSelectedElement,
+  updateElementPosition,
+} from '../../../store/dashboard/dashboardReducer';
 import { AnyDashboardElement } from '../../../types/dashboard.types';
 
 const Layers = () => {
@@ -53,7 +57,7 @@ const Layers = () => {
 
   const onClickHandler = (element: AnyDashboardElement) => {
     dispatch(setSelectedElement(element));
-  }
+  };
 
   return (
     <Drawer
@@ -66,6 +70,8 @@ const Layers = () => {
     >
       <Toolbar />
       <Divider />
+      <br/>
+      <Typography variant='h5'>Layers</Typography>
       <DragDropContext onDragEnd={onDragEndHandler}>
         <Droppable droppableId='droppable'>
           {(provided) => (

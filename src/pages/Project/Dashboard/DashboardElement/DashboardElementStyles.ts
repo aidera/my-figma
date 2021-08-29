@@ -71,6 +71,15 @@ const useStyles = makeStyles((theme: Theme) =>
       left: '-0.7vh',
       cursor: 'w-resize',
     },
+    selectSizeTooltip: {
+      position: 'absolute',
+      top: '100%',
+      left: '50%',
+      transform: 'translate(-50%, 0)',
+      border: '1px solid lightgrey',
+      backgroundColor: 'lightyellow',
+      fontSize: '10px',
+    },
   })
 );
 

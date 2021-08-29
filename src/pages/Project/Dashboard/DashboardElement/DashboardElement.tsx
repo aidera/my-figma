@@ -10,7 +10,6 @@ import Circle from './Circle/Circle';
 import Line from './Line/Line';
 import { useAppDispatch, useAppSelector } from '../../../../store/store-hooks';
 import {
-  resizeElement,
   setMovingElement,
   setResizingElement,
   setSelectedElement,
@@ -22,8 +21,8 @@ import {
   selectSelectedElementId,
 } from '../../../../store/dashboard/dashboardSelectors';
 
-const DashboardElement = (props: { config: IDashboardElement }) => {
-  const { config } = props;
+const DashboardElement = (props: { config: IDashboardElement, isCreating?: boolean }) => {
+  const { config, isCreating } = props;
 
   const classes = useStyles();
   const dispatch = useAppDispatch();
@@ -201,6 +200,12 @@ const DashboardElement = (props: { config: IDashboardElement }) => {
               classes.selectPoint + ' ' + classes.selectBottomRightPoint
             }
           ></div>
+        </div>
+      )}
+      {/* Text helpers */}
+      {(isResizing || isCreating)  && (
+        <div className={classes.selectSizeTooltip}>
+          {config.width + ' x ' + config.height}
         </div>
       )}
     </div>
