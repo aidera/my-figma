@@ -13,6 +13,7 @@ const Rectangle = (props: { config: IDashboardElementRectangle }) => {
       style={{
         border: `${config.border.width}px solid ${config.border.color}`,
         backgroundColor: config.fill,
+        borderRadius: `${config.border.radius}px`
       }}
     ></div>
   );

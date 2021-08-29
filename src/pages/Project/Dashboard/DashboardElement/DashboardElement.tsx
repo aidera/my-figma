@@ -2,8 +2,11 @@ import React, { MouseEvent } from 'react';
 
 import useStyles from './DashboardElementStyles';
 import {
+  AnyDashboardElement,
   DashboardResizeEnum,
-  IDashboardElement,
+  IDashboardElementCircle,
+  IDashboardElementLine,
+  IDashboardElementRectangle,
 } from '../../../../types/dashboard.types';
 import Rectangle from './Rectangle/Rectangle';
 import Circle from './Circle/Circle';
@@ -15,19 +18,24 @@ import {
   setSelectedElement,
 } from '../../../../store/dashboard/dashboardReducer';
 import {
+  selectCreateModeDefaults,
   selectMode,
   selectMovingElementId,
   selectResizingElementId,
   selectSelectedElementId,
 } from '../../../../store/dashboard/dashboardSelectors';
 
-const DashboardElement = (props: { config: IDashboardElement, isCreating?: boolean }) => {
+const DashboardElement = (props: {
+  config: AnyDashboardElement;
+  isCreating?: boolean;
+}) => {
   const { config, isCreating } = props;
 
   const classes = useStyles();
   const dispatch = useAppDispatch();
 
   const mode = useAppSelector(selectMode);
+  const createModeDefaults = useAppSelector(selectCreateModeDefaults);
   const selectedElementId = useAppSelector(selectSelectedElementId);
   const movingElementId = useAppSelector(selectMovingElementId);
   const resizingElementId = useAppSelector(selectResizingElementId);
@@ -108,8 +116,20 @@ const DashboardElement = (props: { config: IDashboardElement, isCreating?: boole
         <Rectangle
           config={{
             ...config,
-            fill: 'white',
-            border: { color: 'blue', width: 2 },
+            fill:
+              (config as IDashboardElementRectangle).fill ||
+              createModeDefaults.rectangle.fill,
+            border: {
+              color:
+                (config as IDashboardElementRectangle).border?.color ||
+                createModeDefaults.rectangle.border.color,
+              width:
+                (config as IDashboardElementRectangle).border?.width ||
+                createModeDefaults.rectangle.border.width,
+              radius:
+                (config as IDashboardElementRectangle).border?.radius ||
+                createModeDefaults.rectangle.border.radius,
+            },
           }}
         />
       )}
@@ -117,8 +137,17 @@ const DashboardElement = (props: { config: IDashboardElement, isCreating?: boole
         <Circle
           config={{
             ...config,
-            fill: 'lightgray',
-            border: { color: 'lightblue', width: 2 },
+            fill:
+              (config as IDashboardElementCircle).fill ||
+              createModeDefaults.circle.fill,
+            border: {
+              color:
+                (config as IDashboardElementCircle).border?.color ||
+                createModeDefaults.circle.border.color,
+              width:
+                (config as IDashboardElementCircle).border?.width ||
+                createModeDefaults.circle.border.width,
+            },
           }}
         />
       )}
@@ -126,8 +155,12 @@ const DashboardElement = (props: { config: IDashboardElement, isCreating?: boole
         <Line
           config={{
             ...config,
-            fill: 'green',
-            lineWidth: 2,
+            fill:
+              (config as IDashboardElementLine).fill ||
+              createModeDefaults.line.fill,
+            lineWidth:
+              (config as IDashboardElementLine).lineWidth ||
+              createModeDefaults.line.lineWidth,
           }}
         />
       )}
@@ -203,7 +236,7 @@ const DashboardElement = (props: { config: IDashboardElement, isCreating?: boole
         </div>
       )}
       {/* Text helpers */}
-      {(isResizing || isCreating)  && (
+      {(isResizing || isCreating) && (
         <div className={classes.selectSizeTooltip}>
           {config.width + ' x ' + config.height}
         </div>

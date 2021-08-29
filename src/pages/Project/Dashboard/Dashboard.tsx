@@ -12,11 +12,11 @@ import {
   setSelectedElement,
 } from '../../../store/dashboard/dashboardReducer';
 import {
+  selectCreateModeDefaults,
   selectCreateModeElementType,
   selectCreatingElement,
   selectElements,
   selectMode,
-  selectMovingElement,
   selectMovingElementId,
   selectResizingElementId,
 } from '../../../store/dashboard/dashboardSelectors';
@@ -24,6 +24,9 @@ import {
   AnyDashboardElement,
   DEFAULT_ELEMENT_NAME,
   IDashboardElement,
+  IDashboardElementCircle,
+  IDashboardElementLine,
+  IDashboardElementRectangle,
 } from '../../../types/dashboard.types';
 import DashboardCreatingElement from './DashboardCreatingElement/DashboardCreatingElement';
 import DashboardElement from './DashboardElement/DashboardElement';
@@ -38,6 +41,7 @@ const Dashboard = () => {
   const movingElementId = useAppSelector(selectMovingElementId);
   const resizingElementId = useAppSelector(selectResizingElementId);
   const mode = useAppSelector(selectMode);
+  const createModeDefaults = useAppSelector(selectCreateModeDefaults);
   const elementType = useAppSelector(selectCreateModeElementType);
 
   const [elementsToDisplay, setElementsToDisplay] = useState<
@@ -87,7 +91,7 @@ const Dashboard = () => {
         if (resizingElementId) {
           dispatch(
             resizeElement({
-              mouseCoords: { x: event.pageX, y: event.pageY }
+              mouseCoords: { x: event.pageX, y: event.pageY },
             })
           );
         }
@@ -144,7 +148,30 @@ const Dashboard = () => {
             },
           };
 
-          dispatch(addElement(newDashboardElement));
+          switch (newDashboardElement.type) {
+            case 'rectangle':
+              const newDashboardElementRectangle: IDashboardElementRectangle = {
+                ...createModeDefaults.rectangle,
+                ...newDashboardElement,
+              };
+              dispatch(addElement(newDashboardElementRectangle));
+              break;
+            case 'circle':
+              const newDashboardElementCircle: IDashboardElementCircle = {
+                ...createModeDefaults.circle,
+                ...newDashboardElement,
+              };
+              dispatch(addElement(newDashboardElementCircle));
+              break;
+            case 'line':
+              const newDashboardElementLine: IDashboardElementLine = {
+                ...createModeDefaults.line,
+                ...newDashboardElement,
+              };
+              dispatch(addElement(newDashboardElementLine));
+              break;
+          }
+
           dispatch(setMode('select'));
           dispatch(setSelectedElement(newDashboardElement));
         }

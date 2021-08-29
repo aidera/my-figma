@@ -7,6 +7,9 @@ import {
   IDashboardCreatingElement,
   BasicCoords,
   DashboardResizeEnum,
+  IDashboardElementRectangle,
+  IDashboardElementCircle,
+  IDashboardElementLine,
 } from '../../types/dashboard.types';
 
 interface DashboardState {
@@ -20,8 +23,24 @@ interface DashboardState {
   resizeMode: DashboardResizeEnum | null;
   resizingElementMouseStartCoords: BasicCoords | null;
   mode: DashboardModeType;
-  createModeElementType: DashboardCreateModeElementType;
+  createModeElementType: DashboardCreateModeElementType | null;
+  createModeDefaults: {
+    rectangle: IDashboardElementRectangle;
+    circle: IDashboardElementCircle;
+    line: IDashboardElementLine;
+  };
 }
+
+const basicDefaults = {
+  id: '',
+  name: '',
+  x: 0,
+  y: 0,
+  point1: { x: 0, y: 0 },
+  point2: { x: 0, y: 0 },
+  height: 100,
+  width: 100,
+};
 
 const initialState: DashboardState = {
   elements: [],
@@ -34,7 +53,34 @@ const initialState: DashboardState = {
   resizeMode: null,
   resizingElementMouseStartCoords: null,
   mode: 'select' as DashboardModeType,
-  createModeElementType: null as DashboardCreateModeElementType,
+  createModeElementType: null as DashboardCreateModeElementType | null,
+  createModeDefaults: {
+    rectangle: {
+      ...basicDefaults,
+      type: 'rectangle',
+      fill: '#FFFFFF',
+      border: {
+        color: '#000000',
+        width: 1,
+        radius: 0,
+      },
+    },
+    circle: {
+      ...basicDefaults,
+      type: 'circle',
+      fill: '#FFFFFF',
+      border: {
+        width: 1,
+        color: '#000000',
+      },
+    },
+    line: {
+      ...basicDefaults,
+      type: 'line',
+      fill: '#000000',
+      lineWidth: 1,
+    },
+  },
 };
 
 export const dashboardSlice = createSlice({
@@ -274,6 +320,67 @@ export const dashboardSlice = createSlice({
         state.elements[foundIdx].name = action.payload.newName;
       }
     },
+
+    setElementFields: (
+      state,
+      action: PayloadAction<{
+        elementId: string;
+        rectangle?: IDashboardElementRectangle;
+        circle?: IDashboardElementCircle;
+        line?: IDashboardElementLine;
+      }>
+    ) => {
+      const foundIdx = state.elements.findIndex(
+        (element) => element.id === action.payload.elementId
+      );
+      if (foundIdx >= 0) {
+        switch (state.elements[foundIdx].type) {
+          case 'rectangle':
+            if (action.payload.rectangle) {
+              state.elements[foundIdx] = {
+                ...(state.elements[foundIdx] as IDashboardElementRectangle),
+                ...action.payload.rectangle,
+              };
+            }
+            break;
+          case 'circle':
+            if (action.payload.circle) {
+              state.elements[foundIdx] = {
+                ...(state.elements[foundIdx] as IDashboardElementCircle),
+                ...action.payload.circle,
+              };
+            }
+            break;
+          case 'line':
+            if (action.payload.line) {
+              state.elements[foundIdx] = {
+                ...(state.elements[foundIdx] as IDashboardElementLine),
+                ...action.payload.line,
+              };
+            }
+            break;
+        }
+      }
+    },
+
+    setCreateModeDefaults: (
+      state,
+      action: PayloadAction<{
+        rectangle?: IDashboardElementRectangle;
+        circle?: IDashboardElementCircle;
+        line?: IDashboardElementLine;
+      }>
+    ) => {
+      if (action.payload.rectangle) {
+        state.createModeDefaults.rectangle = action.payload.rectangle;
+      }
+      if (action.payload.circle) {
+        state.createModeDefaults.circle = action.payload.circle;
+      }
+      if (action.payload.line) {
+        state.createModeDefaults.line = action.payload.line;
+      }
+    },
   },
 });
 
@@ -290,6 +397,8 @@ export const {
   setResizingElement,
   resizeElement,
   renameElement,
+  setCreateModeDefaults,
+  setElementFields
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

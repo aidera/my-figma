@@ -3,7 +3,7 @@ export type BasicCoords = { x: number; y: number };
 export interface IDashboardElement {
   id: string;
   name: string;
-  type: DashboardCreateModeElementType;
+  type: DashboardCreateModeElementType | null;
   x: number;
   y: number;
   width: number;
@@ -17,6 +17,7 @@ export interface IDashboardElementRectangle extends IDashboardElement {
   border: {
     width: number;
     color: string;
+    radius: number;
   };
 }
 
@@ -59,8 +60,7 @@ export type DashboardCreateModeElementType =
   | 'circle'
   | 'line'
   | 'text'
-  | 'image'
-  | null;
+  | 'image';
 
 export enum DashboardResizeEnum {
   top,

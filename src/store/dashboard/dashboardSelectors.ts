@@ -42,3 +42,6 @@ export const selectMode = (state: RootState) => state.dashboard.mode;
 
 export const selectCreateModeElementType = (state: RootState) =>
   state.dashboard.createModeElementType;
+
+export const selectCreateModeDefaults = (state: RootState) =>
+  state.dashboard.createModeDefaults;

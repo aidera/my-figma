@@ -14,6 +14,7 @@ const Rectangle = (props: { config: IDashboardElementLine }) => {
     >
       <line
         stroke={config.fill}
+        strokeWidth={config.lineWidth}
         x1={config.point1.x <= config.point2.x ? 0 : config.width}
         y1={config.point1.y <= config.point2.y ? 0 : config.height}
         x2={config.point1.x > config.point2.x ? 0 : config.width}

@@ -3,12 +3,13 @@ import { Drawer, Toolbar } from '@material-ui/core';
 
 import useStyles from './ItemDetailsStyles';
 import { useAppSelector } from '../../../store/store-hooks';
-import { selectSelectedElement } from '../../../store/dashboard/dashboardSelectors';
+import { selectMode } from '../../../store/dashboard/dashboardSelectors';
+import CreationMode from './CreationMode/CreationMode';
+import SelectionMode from './SelectionMode/SelectionMode';
 
 const ItemDetails = () => {
   const classes = useStyles();
-
-  const selectedElement = useAppSelector(selectSelectedElement);
+  const mode = useAppSelector(selectMode);
 
   return (
     <Drawer
@@ -20,15 +21,11 @@ const ItemDetails = () => {
       }}
     >
       <Toolbar />
-      {selectedElement && (
-        <>
-          <p>{selectedElement.id}</p>
-          <p>{selectedElement.name}</p>
-          <p>{selectedElement.type}</p>
-          <p>{selectedElement.height}</p>
-          <p>{selectedElement.width}</p>
-        </>
-      )}
+      <div className={classes.content}>
+        <br />
+        {mode === 'create' && <CreationMode />}
+        {mode === 'select' && <SelectionMode />}
+      </div>
     </Drawer>
   );
 };
