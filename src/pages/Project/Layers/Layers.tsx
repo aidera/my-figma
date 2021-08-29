@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, FocusEvent } from 'react';
 import {
   Divider,
   Drawer,
@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   RootRef,
+  TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -22,18 +23,23 @@ import {
 
 import useStyles from './LayersStyles';
 import { useAppDispatch, useAppSelector } from '../../../store/store-hooks';
-import { selectElements } from '../../../store/dashboard/dashboardSelectors';
+import {
+  selectElements,
+  selectSelectedElementId,
+} from '../../../store/dashboard/dashboardSelectors';
 import {
   setSelectedElement,
   updateElementPosition,
+  renameElement,
 } from '../../../store/dashboard/dashboardReducer';
 import { AnyDashboardElement } from '../../../types/dashboard.types';
 
 const Layers = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
-
   const elements = useAppSelector(selectElements);
+  const selectedElementId = useAppSelector(selectSelectedElementId);
+  const [editingElementId, setEditingElementId] = useState<string | null>(null);
 
   const getItemStyle = (
     isDragging: boolean,
@@ -56,7 +62,24 @@ const Layers = () => {
   };
 
   const onClickHandler = (element: AnyDashboardElement) => {
-    dispatch(setSelectedElement(element));
+    /** We need to select item, but if it was already selected - then we should edit it */
+    if (element.id === selectedElementId) {
+      setEditingElementId(element.id);
+    } else if (element.id !== editingElementId) {
+      dispatch(setSelectedElement(element));
+    }
+  };
+
+  const textFieldOnBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
+    if (editingElementId) {
+      dispatch(
+        renameElement({
+          elementId: editingElementId,
+          newName: event.target.value,
+        })
+      );
+      setEditingElementId(null);
+    }
   };
 
   return (
@@ -70,7 +93,7 @@ const Layers = () => {
     >
       <Toolbar />
       <Divider />
-      <br/>
+      <br />
       <Typography variant='h5'>Layers</Typography>
       <DragDropContext onDragEnd={onDragEndHandler}>
         <Droppable droppableId='droppable'>
@@ -96,10 +119,21 @@ const Layers = () => {
                         )}
                         onClick={() => onClickHandler(element)}
                       >
-                        <ListItemIcon>
-                          <LayersIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={element.name} />
+                        {editingElementId !== element.id && (
+                          <>
+                            <ListItemIcon>
+                              <LayersIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={element.name} />
+                          </>
+                        )}
+                        {editingElementId === element.id && (
+                          <TextField
+                            id='standard-basic'
+                            defaultValue={element.name}
+                            onBlur={textFieldOnBlurHandler}
+                          />
+                        )}
                       </ListItem>
                     )}
                   </Draggable>

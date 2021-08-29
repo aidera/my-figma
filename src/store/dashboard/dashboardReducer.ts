@@ -259,6 +259,21 @@ export const dashboardSlice = createSlice({
         }
       }
     },
+
+    renameElement: (
+      state,
+      action: PayloadAction<{
+        newName: string;
+        elementId: string;
+      }>
+    ) => {
+      const foundIdx = state.elements.findIndex(
+        (element) => element.id === action.payload.elementId
+      );
+      if (foundIdx >= 0) {
+        state.elements[foundIdx].name = action.payload.newName;
+      }
+    },
   },
 });
 
@@ -274,6 +289,7 @@ export const {
   moveElement,
   setResizingElement,
   resizeElement,
+  renameElement,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
