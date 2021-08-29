@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { IDashboardElementRectangle } from '../../../../../types/dashboard.types';
 import useStyles from './RectangleStyles';
 
-const Rectangle = (props: { config: IDashboardElementRectangle }) => {
+const Rectangle = memo((props: { config: IDashboardElementRectangle }) => {
   const { config } = props;
   const classes = useStyles();
 
@@ -17,6 +17,6 @@ const Rectangle = (props: { config: IDashboardElementRectangle }) => {
       }}
     ></div>
   );
-};
+});
 
 export default Rectangle;

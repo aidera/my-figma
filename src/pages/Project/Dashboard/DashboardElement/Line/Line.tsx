@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { IDashboardElementLine } from '../../../../../types/dashboard.types';
 import useStyles from './LineStyles';
 
-const Rectangle = (props: { config: IDashboardElementLine }) => {
+const Line = memo((props: { config: IDashboardElementLine }) => {
   const { config } = props;
   const classes = useStyles();
 
@@ -22,6 +22,6 @@ const Rectangle = (props: { config: IDashboardElementLine }) => {
       ></line>
     </svg>
   );
-};
+});
 
-export default Rectangle;
+export default Line;

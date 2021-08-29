@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, memo } from 'react';
 import { TextField, Typography } from '@material-ui/core';
 
 import { useAppDispatch, useAppSelector } from '../../../../store/store-hooks';
@@ -14,7 +14,7 @@ import {
 import useStyles from './SelectionModeStyles';
 import ColorDisplayer from '../../../../components/ColorDisplayer/ColorDisplayer';
 
-const SelectionMode = () => {
+const SelectionMode = memo(() => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const selectedElement = useAppSelector(selectSelectedElement);
@@ -329,6 +329,6 @@ const SelectionMode = () => {
       {renderEditableFields()}
     </div>
   ) : null;
-};
+});
 
 export default SelectionMode;

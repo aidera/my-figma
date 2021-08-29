@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React, { memo, MouseEvent } from 'react';
 
 import useStyles from './DashboardElementStyles';
 import {
@@ -25,7 +25,7 @@ import {
   selectSelectedElementId,
 } from '../../../../store/dashboard/dashboardSelectors';
 
-const DashboardElement = (props: {
+const DashboardElement = memo((props: {
   config: AnyDashboardElement;
   isCreating?: boolean;
 }) => {
@@ -249,6 +249,6 @@ const DashboardElement = (props: {
       )}
     </div>
   );
-};
+});
 
 export default DashboardElement;

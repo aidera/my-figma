@@ -1,10 +1,10 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, memo } from 'react';
 import { Menu, Typography } from '@material-ui/core';
 import { SketchPicker } from 'react-color';
 
 import useStyles from './ColorDisplayerStyles';
 
-const ColorDisplayer = (props: {
+const ColorDisplayer = memo((props: {
   label: string;
   color: string;
   onColorChange: Function;
@@ -51,6 +51,6 @@ const ColorDisplayer = (props: {
       </Menu>
     </>
   );
-};
+});
 
 export default ColorDisplayer;

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { IDashboardElementCircle } from '../../../../../types/dashboard.types';
 import useStyles from './CircleStyles';
 
-const Rectangle = (props: { config: IDashboardElementCircle }) => {
+const Circle = memo((props: { config: IDashboardElementCircle }) => {
   const { config } = props;
   const classes = useStyles();
 
@@ -16,6 +16,6 @@ const Rectangle = (props: { config: IDashboardElementCircle }) => {
       }}
     ></div>
   );
-};
+});
 
-export default Rectangle;
+export default Circle;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   AppBar,
   IconButton,
@@ -25,7 +25,7 @@ import {
 } from '../../../store/dashboard/dashboardReducer';
 import { DashboardCreateModeElementType } from '../../../types/dashboard.types';
 
-const ProjectToolbar = () => {
+const ProjectToolbar = memo(() => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
 
@@ -110,6 +110,6 @@ const ProjectToolbar = () => {
       </Toolbar>
     </AppBar>
   );
-};
+});
 
 export default ProjectToolbar;

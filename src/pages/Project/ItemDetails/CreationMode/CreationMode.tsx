@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, memo } from 'react';
 import { TextField, Typography } from '@material-ui/core';
 
 import { useAppDispatch, useAppSelector } from '../../../../store/store-hooks';
@@ -13,7 +13,7 @@ import {
 import { setCreateModeDefaults } from '../../../../store/dashboard/dashboardReducer';
 import ColorDisplayer from '../../../../components/ColorDisplayer/ColorDisplayer';
 
-const CreationMode = () => {
+const CreationMode = memo(() => {
   const dispatch = useAppDispatch();
   const createModeElementType = useAppSelector(selectCreateModeElementType);
   const createModeDefaults = useAppSelector(selectCreateModeDefaults);
@@ -298,6 +298,6 @@ const CreationMode = () => {
   } else {
     return null;
   }
-};
+});
 
 export default CreationMode;
