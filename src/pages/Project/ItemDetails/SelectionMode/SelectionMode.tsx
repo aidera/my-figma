@@ -12,6 +12,7 @@ import {
   IDashboardElementRectangle,
 } from '../../../../types/dashboard.types';
 import useStyles from './SelectionModeStyles';
+import ColorDisplayer from '../../../../components/ColorDisplayer/ColorDisplayer';
 
 const SelectionMode = () => {
   const classes = useStyles();
@@ -168,23 +169,24 @@ const SelectionMode = () => {
       case 'rectangle':
         return (
           <>
-            <TextField
-              label='Fill color'
-              defaultValue={
-                (selectedElement as IDashboardElementRectangle).fill
-              }
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange('rectangle', 'fill', event.target.value)
+            <ColorDisplayer
+              label={'Fill color'}
+              color={(selectedElement as IDashboardElementRectangle).fill}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('rectangle', 'fill', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Border width'
               defaultValue={
                 (selectedElement as IDashboardElementRectangle).border.width
               }
+              InputProps={{ inputProps: { min: 0 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange(
                   'rectangle',
@@ -193,29 +195,30 @@ const SelectionMode = () => {
                 )
               }
             />
+
             <br />
             <br />
-            <TextField
-              label='Border color'
-              defaultValue={
+
+            <ColorDisplayer
+              label={'Border color'}
+              color={
                 (selectedElement as IDashboardElementRectangle).border.color
               }
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange(
-                  'rectangle',
-                  'borderColor',
-                  event.target.value
-                )
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('rectangle', 'borderColor', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Border radius'
               defaultValue={
                 (selectedElement as IDashboardElementRectangle).border.radius
               }
+              InputProps={{ inputProps: { min: 0 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange(
                   'rectangle',
@@ -230,21 +233,24 @@ const SelectionMode = () => {
       case 'circle':
         return (
           <>
-            <TextField
-              label='Fill color'
-              defaultValue={(selectedElement as IDashboardElementCircle).fill}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange('circle', 'fill', event.target.value)
+            <ColorDisplayer
+              label={'Fill color'}
+              color={(selectedElement as IDashboardElementCircle).fill}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('circle', 'fill', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Border width'
               defaultValue={
                 (selectedElement as IDashboardElementCircle).border.width
               }
+              InputProps={{ inputProps: { min: 1 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange(
                   'circle',
@@ -253,19 +259,15 @@ const SelectionMode = () => {
                 )
               }
             />
+
             <br />
             <br />
-            <TextField
-              label='Border color'
-              defaultValue={
-                (selectedElement as IDashboardElementCircle).border.color
-              }
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange(
-                  'circle',
-                  'borderColor',
-                  event.target.value
-                )
+
+            <ColorDisplayer
+              label={'Border color'}
+              color={(selectedElement as IDashboardElementCircle).border.color}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('circle', 'borderColor', color)
               }
             />
           </>
@@ -274,21 +276,24 @@ const SelectionMode = () => {
       case 'line':
         return (
           <>
-            <TextField
-              label='Fill color'
-              defaultValue={(selectedElement as IDashboardElementLine).fill}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange('line', 'fill', event.target.value)
+            <ColorDisplayer
+              label={'Fill color'}
+              color={(selectedElement as IDashboardElementLine).fill}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('line', 'fill', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Line width'
               defaultValue={
                 (selectedElement as IDashboardElementLine).lineWidth
               }
+              InputProps={{ inputProps: { min: 0 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange('line', 'lineWidth', event.target.value)
               }

@@ -339,7 +339,18 @@ export const dashboardSlice = createSlice({
             if (action.payload.rectangle) {
               state.elements[foundIdx] = {
                 ...(state.elements[foundIdx] as IDashboardElementRectangle),
-                ...action.payload.rectangle,
+                fill: action.payload.rectangle.fill,
+                border: {
+                  color: action.payload.rectangle.border.color,
+                  width:
+                    action.payload.rectangle.border.width >= 0
+                      ? action.payload.rectangle.border.width
+                      : 0,
+                  radius:
+                    action.payload.rectangle.border.radius >= 0
+                      ? action.payload.rectangle.border.radius
+                      : 0,
+                },
               };
             }
             break;
@@ -347,7 +358,14 @@ export const dashboardSlice = createSlice({
             if (action.payload.circle) {
               state.elements[foundIdx] = {
                 ...(state.elements[foundIdx] as IDashboardElementCircle),
-                ...action.payload.circle,
+                fill: action.payload.circle.fill,
+                border: {
+                  color: action.payload.circle.border.color,
+                  width:
+                    action.payload.circle.border.width >= 0
+                      ? action.payload.circle.border.width
+                      : 0,
+                },
               };
             }
             break;
@@ -355,7 +373,11 @@ export const dashboardSlice = createSlice({
             if (action.payload.line) {
               state.elements[foundIdx] = {
                 ...(state.elements[foundIdx] as IDashboardElementLine),
-                ...action.payload.line,
+                fill: action.payload.line.fill,
+                lineWidth:
+                  action.payload.line.lineWidth >= 1
+                    ? action.payload.line.lineWidth
+                    : 1,
               };
             }
             break;
@@ -372,13 +394,31 @@ export const dashboardSlice = createSlice({
       }>
     ) => {
       if (action.payload.rectangle) {
-        state.createModeDefaults.rectangle = action.payload.rectangle;
+        state.createModeDefaults.rectangle.fill = action.payload.rectangle.fill;
+        state.createModeDefaults.rectangle.border.color =
+          action.payload.rectangle.border.color;
+        state.createModeDefaults.rectangle.border.width =
+          action.payload.rectangle.border.width >= 0
+            ? action.payload.rectangle.border.width
+            : 0;
+        state.createModeDefaults.rectangle.border.radius =
+          action.payload.rectangle.border.radius >= 0
+            ? action.payload.rectangle.border.radius
+            : 0;
       }
       if (action.payload.circle) {
-        state.createModeDefaults.circle = action.payload.circle;
+        state.createModeDefaults.circle.fill = action.payload.circle.fill;
+        state.createModeDefaults.circle.border.color =
+          action.payload.circle.border.color;
+        state.createModeDefaults.circle.border.width =
+          action.payload.circle.width >= 0 ? action.payload.circle.width : 0;
       }
       if (action.payload.line) {
-        state.createModeDefaults.line = action.payload.line;
+        state.createModeDefaults.line.fill = action.payload.line.fill;
+        state.createModeDefaults.line.lineWidth =
+          action.payload.line.lineWidth >= 1
+            ? action.payload.line.lineWidth
+            : 1;
       }
     },
   },
@@ -398,7 +438,7 @@ export const {
   resizeElement,
   renameElement,
   setCreateModeDefaults,
-  setElementFields
+  setElementFields,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

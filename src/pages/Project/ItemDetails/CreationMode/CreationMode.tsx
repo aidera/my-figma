@@ -11,6 +11,7 @@ import {
   DEFAULT_ELEMENT_NAME,
 } from '../../../../types/dashboard.types';
 import { setCreateModeDefaults } from '../../../../store/dashboard/dashboardReducer';
+import ColorDisplayer from '../../../../components/ColorDisplayer/ColorDisplayer';
 
 const CreationMode = () => {
   const dispatch = useAppDispatch();
@@ -80,74 +81,74 @@ const CreationMode = () => {
         }
         break;
 
-        case 'circle':
-          switch (property) {
-            case 'fill':
-              dispatch(
-                setCreateModeDefaults({
-                  circle: {
-                    ...createModeDefaults.circle,
-                    fill: value,
-                  },
-                })
-              );
-              break;
-  
-            case 'borderWidth':
-              dispatch(
-                setCreateModeDefaults({
-                  circle: {
-                    ...createModeDefaults.circle,
-                    border: {
-                      ...createModeDefaults.circle.border,
-                      width: +value,
-                    },
-                  },
-                })
-              );
-              break;
-  
-            case 'borderColor':
-              dispatch(
-                setCreateModeDefaults({
-                  circle: {
-                    ...createModeDefaults.circle,
-                    border: {
-                      ...createModeDefaults.circle.border,
-                      color: value,
-                    },
-                  },
-                })
-              );
-              break;
-          }
-          break;
-
-          case 'line':
-            switch (property) {
-              case 'fill':
-                dispatch(
-                  setCreateModeDefaults({
-                    line: {
-                      ...createModeDefaults.line,
-                      fill: value,
-                    },
-                  })
-                );
-                break;
-    
-              case 'lineWidth':
-                dispatch(
-                  setCreateModeDefaults({
-                    line: {
-                      ...createModeDefaults.line,
-                      lineWidth: +value
-                    },
-                  })
-                );
-                break;
-            }
+      case 'circle':
+        switch (property) {
+          case 'fill':
+            dispatch(
+              setCreateModeDefaults({
+                circle: {
+                  ...createModeDefaults.circle,
+                  fill: value,
+                },
+              })
+            );
             break;
+
+          case 'borderWidth':
+            dispatch(
+              setCreateModeDefaults({
+                circle: {
+                  ...createModeDefaults.circle,
+                  border: {
+                    ...createModeDefaults.circle.border,
+                    width: +value,
+                  },
+                },
+              })
+            );
+            break;
+
+          case 'borderColor':
+            dispatch(
+              setCreateModeDefaults({
+                circle: {
+                  ...createModeDefaults.circle,
+                  border: {
+                    ...createModeDefaults.circle.border,
+                    color: value,
+                  },
+                },
+              })
+            );
+            break;
+        }
+        break;
+
+      case 'line':
+        switch (property) {
+          case 'fill':
+            dispatch(
+              setCreateModeDefaults({
+                line: {
+                  ...createModeDefaults.line,
+                  fill: value,
+                },
+              })
+            );
+            break;
+
+          case 'lineWidth':
+            dispatch(
+              setCreateModeDefaults({
+                line: {
+                  ...createModeDefaults.line,
+                  lineWidth: +value,
+                },
+              })
+            );
+            break;
+        }
+        break;
     }
   };
 
@@ -156,19 +157,22 @@ const CreationMode = () => {
       case 'rectangle':
         return (
           <>
-            <TextField
-              label='Fill color'
-              defaultValue={createModeDefaults.rectangle.fill}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange('rectangle', 'fill', event.target.value)
+            <ColorDisplayer
+              label={'Fill color'}
+              color={createModeDefaults.rectangle.fill}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('rectangle', 'fill', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Border width'
               defaultValue={createModeDefaults.rectangle.border.width}
+              InputProps={{ inputProps: { min: 0 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange(
                   'rectangle',
@@ -177,25 +181,26 @@ const CreationMode = () => {
                 )
               }
             />
+
             <br />
             <br />
-            <TextField
-              label='Border color'
-              defaultValue={createModeDefaults.rectangle.border.color}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange(
-                  'rectangle',
-                  'borderColor',
-                  event.target.value
-                )
+
+            <ColorDisplayer
+              label={'Border color'}
+              color={createModeDefaults.rectangle.border.color}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('rectangle', 'borderColor', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Border radius'
               defaultValue={createModeDefaults.rectangle.border.radius}
+              InputProps={{ inputProps: { min: 0 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange(
                   'rectangle',
@@ -210,19 +215,22 @@ const CreationMode = () => {
       case 'circle':
         return (
           <>
-            <TextField
-              label='Fill color'
-              defaultValue={createModeDefaults.circle.fill}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange('circle', 'fill', event.target.value)
+            <ColorDisplayer
+              label={'Fill color'}
+              color={createModeDefaults.circle.fill}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('circle', 'fill', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Border width'
               defaultValue={createModeDefaults.circle.border.width}
+              InputProps={{ inputProps: { min: 0 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange(
                   'circle',
@@ -231,17 +239,15 @@ const CreationMode = () => {
                 )
               }
             />
+
             <br />
             <br />
-            <TextField
-              label='Border color'
-              defaultValue={createModeDefaults.circle.border.color}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange(
-                  'circle',
-                  'borderColor',
-                  event.target.value
-                )
+
+            <ColorDisplayer
+              label={'Border color'}
+              color={createModeDefaults.circle.border.color}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('circle', 'borderColor', color)
               }
             />
           </>
@@ -250,19 +256,22 @@ const CreationMode = () => {
       case 'line':
         return (
           <>
-            <TextField
-              label='Fill color'
-              defaultValue={createModeDefaults.line.fill}
-              onInput={(event: ChangeEvent<HTMLInputElement>) =>
-                onEditableFieldsChange('line', 'fill', event.target.value)
+            <ColorDisplayer
+              label={'Fill color'}
+              color={createModeDefaults.line.fill}
+              onColorChange={(color: string) =>
+                onEditableFieldsChange('line', 'fill', color)
               }
             />
+
             <br />
-            <br />
+
             <TextField
               type='number'
               label='Line width'
               defaultValue={createModeDefaults.line.lineWidth}
+              InputProps={{ inputProps: { min: 1 } }}
+              fullWidth
               onInput={(event: ChangeEvent<HTMLInputElement>) =>
                 onEditableFieldsChange('line', 'lineWidth', event.target.value)
               }
